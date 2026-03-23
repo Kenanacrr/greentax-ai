@@ -2,6 +2,10 @@
 
 🌱 **GreenTax AI**, şirketlerin AB Sınırda Karbon Düzenleme Mekanizması (SKDM/CBAM) uyumluluğunu yöneten profesyonel bir web uygulamasıdır.
 
+## 📋 Proje Açıklaması
+
+Bu proje, AB'nin Sınırda Karbon Düzenleme Mekanizması (SKDM/CBAM) kapsamında şirketlerin karbon emisyonlarını hesaplamalarına, vergi yüklerini analiz etmelerine ve stratejik kararlar almalarına yardımcı olan kapsamlı bir web uygulamasıdır.
+
 ## 🚀 Özellikler
 
 - **Veri Giriş Katmanı**: CSV dosya yükleme veya hazır demo veri kullanımı
