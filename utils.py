@@ -1,11 +1,24 @@
-def generate_mock_recommendations(results):
-    # Your mock recommendation logic here
-    pass
+# util.py
+
+import logging  # Removed unused imports
 
 
-def parse_ai_response_to_recommendations(response):
-    # Improvements to this function are made here
-    # Error handling code added
-    pass
+def generate_mock_recommendations(data):
+    try:
+        # Validate input
+        if not isinstance(data, list) or not data:
+            raise ValueError('Input data must be a non-empty list.')
+        recommendations = []
+        for item in data:
+            # Generate recommendations based on input
+            recommendations.append(f'Recommendation for {item}')
+        return recommendations
+    except Exception as e:
+        logging.error(f'Error generating recommendations: {e}')
+        return []  # Return empty list on error
 
-# Other functional code if necessary...
+
+def another_function():
+    pass  # This is just an example function
+
+# Add more functions as needed
