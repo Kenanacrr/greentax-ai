@@ -224,17 +224,8 @@ def generate_mock_recommendations(results):
     recommendations = []
     
     # En yüksek vergi yüküne sahip ürünü bul
-    product_data = results.get('product_data', [])
-    if isinstance(product_data, list) and product_data:
-        # List ise, en yüksek vergi yüküne sahip ürünü bul
-        highest_tax_product = max(product_data, key=lambda x: x.get('Vergi Yükü', 0))
-        
-        recommendations.append({
-            'title': f"Yüksek Vergi Yükü: {highest_tax_product.get('Ürün Tipi', 'Bilinmeyen')}",
-            'description': f"{highest_tax_product.get('Ürün Tipi', 'Ürün')} ürününde {highest_tax_product.get('Vergi Yükü', 0):.0f}€ vergi yükü tespit edildi.",
-            'recommendation': "Yenilenebilir enerji kaynaklarına geçiş yaparak enerji tüketimi emisyonlarını %30-50 azaltabilirsiniz."
-        })
-    elif isinstance(product_data, pd.DataFrame) and not product_data.empty:
+    product_data = results.get('product_data', pd.DataFrame())
+    if not product_data.empty:
         # DataFrame ise
         highest_tax_product = product_data.loc[product_data['Vergi Yükü'].idxmax()]
         
@@ -245,16 +236,8 @@ def generate_mock_recommendations(results):
         })
     
     # Hammadde kaynaklarına göre öneriler
-    raw_material_data = results.get('raw_material_emissions', [])
-    if isinstance(raw_material_data, list) and raw_material_data:
-        fossil_based = [item for item in raw_material_data if item.get('Hammadde Kaynağı') == 'Fosil Bazlı']
-        if fossil_based and sum(item.get('Emisyon', 0) for item in fossil_based) > results.get('total_emissions', 0) * 0.3:
-            recommendations.append({
-                'title': "Hammadde Tedarik Stratejisi",
-                'description': "Fosil bazlı hammadde kullanımı toplam emisyonların %30'undan fazlasını oluşturuyor.",
-                'recommendation': "Geri dönüştürülmüş veya yenilenebilir kaynaklı hammadde tedarikçilerine geçiş yaparak emisyonları azaltın."
-            })
-    elif isinstance(raw_material_data, pd.DataFrame) and not raw_material_data.empty:
+    raw_material_data = results.get('raw_material_emissions', pd.DataFrame())
+    if not raw_material_data.empty:
         fossil_based = raw_material_data[raw_material_data['Hammadde Kaynağı'] == 'Fosil Bazlı']
         if not fossil_based.empty and fossil_based['Emisyon'].sum() > results.get('total_emissions', 0) * 0.3:
             recommendations.append({
