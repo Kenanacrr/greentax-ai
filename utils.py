@@ -223,36 +223,50 @@ def generate_mock_recommendations(results):
     """
     recommendations = []
     
-    # En yüksek vergi yüküne sahip ürünü bul
-    product_data = results.get('product_data', pd.DataFrame())
-    if not product_data.empty:
-        # DataFrame ise
-        highest_tax_product = product_data.loc[product_data['Vergi Yükü'].idxmax()]
-        
-        recommendations.append({
-            'title': f"Yüksek Vergi Yükü: {highest_tax_product['Ürün Tipi']}",
-            'description': f"{highest_tax_product['Ürün Tipi']} ürününde {highest_tax_product['Vergi Yükü']:.0f}€ vergi yükü tespit edildi.",
-            'recommendation': "Yenilenebilir enerji kaynaklarına geçiş yaparak enerji tüketimi emisyonlarını %30-50 azaltabilirsiniz."
-        })
+    try:
+        # En yüksek vergi yüküne sahip ürünü bul
+        product_data = results.get('product_data', pd.DataFrame())
+        if isinstance(product_data, pd.DataFrame) and not product_data.empty:
+            if 'Vergi Yükü' in product_data.columns:
+                highest_tax_idx = product_data['Vergi Yükü'].idxmax()
+                highest_tax_product = product_data.loc[highest_tax_idx]
+                
+                recommendations.append({
+                    'title': f"Yüksek Vergi Yükü: {highest_tax_product['Ürün Tipi']}",
+                    'description': f"{highest_tax_product['Ürün Tipi']} ürününde {highest_tax_product['Vergi Yükü']:.0f}€ vergi yükü tespit edildi.",
+                    'recommendation': "Yenilenebilir enerji kaynaklarına geçiş yaparak enerji tüketimi emisyonlarını %30-50 azaltabilirsiniz."
+                })
+    except Exception as e:
+        print(f"Ürün verisi işlemesinde hata: {str(e)}")
     
-    # Hammadde kaynaklarına göre öneriler
-    raw_material_data = results.get('raw_material_emissions', pd.DataFrame())
-    if not raw_material_data.empty:
-        fossil_based = raw_material_data[raw_material_data['Hammadde Kaynağı'] == 'Fosil Bazlı']
-        if not fossil_based.empty and fossil_based['Emisyon'].sum() > results.get('total_emissions', 0) * 0.3:
+    try:
+        # Hammadde kaynaklarına göre öneriler
+        raw_material_data = results.get('raw_material_emissions', pd.DataFrame())
+        if isinstance(raw_material_data, pd.DataFrame) and not raw_material_data.empty:
+            if 'Hammadde Kaynağı' in raw_material_data.columns and 'Emisyon' in raw_material_data.columns:
+                fossil_based = raw_material_data[raw_material_data['Hammadde Kaynağı'] == 'Fosil Bazlı']
+                if not fossil_based.empty:
+                    fossil_emission = fossil_based['Emisyon'].sum()
+                    total_emissions = results.get('total_emissions', 0)
+                    if total_emissions > 0 and fossil_emission > total_emissions * 0.3:
+                        recommendations.append({
+                            'title': "Hammadde Tedarik Stratejisi",
+                            'description': "Fosil bazlı hammadde kullanımı toplam emisyonların %30'undan fazlasını oluşturuyor.",
+                            'recommendation': "Geri dönüştürülmüş veya yenilenebilir kaynaklı hammadde tedarikçilerine geçiş yaparak emisyonları azaltın."
+                        })
+    except Exception as e:
+        print(f"Hammadde verisi işlemesinde hata: {str(e)}")
+    
+    try:
+        # Genel öneriler
+        if results.get('carbon_intensity', 0) > 5.0:
             recommendations.append({
-                'title': "Hammadde Tedarik Stratejisi",
-                'description': "Fosil bazlı hammadde kullanımı toplam emisyonların %30'undan fazlasını oluşturuyor.",
-                'recommendation': "Geri dönüştürülmüş veya yenilenebilir kaynaklı hammadde tedarikçilerine geçiş yaparak emisyonları azaltın."
+                'title': "Karbon Yoğunluğu Optimizasyonu",
+                'description': f"Karbon yoğunluğunuz {results.get('carbon_intensity', 0):.2f} kg CO2/€ ile yüksek seviyede.",
+                'recommendation': "Üretim proseslerinizi optimize edin ve enerji verimliliği projelerine yatırım yapın."
             })
-    
-    # Genel öneriler
-    if results.get('carbon_intensity', 0) > 5.0:
-        recommendations.append({
-            'title': "Karbon Yoğunluğu Optimizasyonu",
-            'description': f"Karbon yoğunluğunuz {results.get('carbon_intensity', 0):.2f} kg CO2/€ ile yüksek seviyede.",
-            'recommendation': "Üretim proseslerinizi optimize edin ve enerji verimliliği projelerine yatırım yapın."
-        })
+    except Exception as e:
+        print(f"Karbon yoğunluğu analizi hatası: {str(e)}")
     
     # Eğer öneri yoksa varsayılan öneri
     if not recommendations:
