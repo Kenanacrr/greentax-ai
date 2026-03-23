@@ -1,4 +1,5 @@
-# GreenTax AI - SKDM/CBAM Uyumluluk Yönetim Sistemi
+# greentax-ai
+GreenTax AI — CBAM Compliance Platform
 
 🌱 **GreenTax AI**, şirketlerin AB Sınırda Karbon Düzenleme Mekanizması (SKDM/CBAM) uyumluluğunu yöneten profesyonel bir web uygulamasıdır.
 
