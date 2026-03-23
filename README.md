@@ -98,7 +98,39 @@ greentax-ai/
 └── README.md          # Bu dosya
 ```
 
-## 🐛 Sorun Giderme
+## � API Entegrasyonu (Opsiyonel)
+
+Gerçek AI önerileri için Anthropic Claude veya OpenAI API anahtarlarını ekleyebilirsiniz:
+
+### Anthropic Claude API
+```bash
+export ANTHROPIC_API_KEY="your-api-key-here"
+```
+
+### OpenAI API
+```bash
+export OPENAI_API_KEY="your-api-key-here"
+```
+
+API anahtarları olmadan uygulama mock önerilerle çalışır.
+
+## 📚 Teknik Bilgiler
+
+### SKDM/CBAM Nedir?
+AB Sınırda Karbon Düzenleme Mekanizması (SKDM/CBAM), Avrupa Birliği'nin İklim Eylem Planının bir parçasıdır. Bu mekanizma, AB'ye ithal edilen ürünlerde karbon sızıntısını önlemek için tasarlanmıştır.
+
+### Hesaplama Modeli
+1. **Üretim Emisyonu**: Ürün tipi × Üretim Miktarı × Emisyon Faktörü
+2. **Enerji Emisyonu**: Enerji Tüketimi × Şebeke Yoğunluğu
+3. **Toplam Emisyon**: Üretim Emisyonu + Enerji Emisyonu
+4. **Vergi Yükü**: Toplam Emisyon × Karbon Fiyatı
+
+### Parametre Açıklaması
+- **Grid Intensity**: Elektrik şebekenizin ortalama karbon yoğunluğu
+- **Carbon Price**: AB ETS (Emissions Trading System) referans fiyatı
+- **Emission Factors**: Ürün tipine göre standar emisyon faktörleri
+
+## �🐛 Sorun Giderme
 
 ### Uygulama Açılmıyor
 - Python sürümünüzü kontrol edin: `python --version`

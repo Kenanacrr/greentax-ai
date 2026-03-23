@@ -1,17 +1,31 @@
 # utils.py - GreenTax AI Yardımcı Fonksiyonları
-# Bu modül, hesaplama motoru, AI önerileri ve demo veri yükleme
-# fonksiyonlarını içerir.
+"""
+GreenTax AI Utility Module
+
+Bu modül, SKDM/CBAM uyumluluğu için hesaplama motoru, 
+AI önerileri ve demo veri yükleme fonksiyonlarını içerir.
+
+Fonksiyonlar:
+    - load_demo_data(): Demo veri setini oluşturur
+    - calculate_emissions(): Karbon emisyonlarını hesaplar
+    - generate_ai_recommendations(): AI tabanlı öneriler üretir
+    - generate_mock_recommendations(): Mock öneriler üretir
+"""
 
 import pandas as pd
 import numpy as np
 import os
+from typing import Dict, List, Any, Optional
 
 # Demo veri setini yükleme fonksiyonu
 
 
-def load_demo_data():
+def load_demo_data() -> pd.DataFrame:
     """
     Demo veri setini oluşturur. Gerçek kullanımda CSV dosyasından yüklenir.
+    
+    Returns:
+        pd.DataFrame: 50 satır ve 4 sütun içeren demo veri seti
     """
     np.random.seed(42)  # Tutarlı sonuçlar için
 
@@ -32,22 +46,44 @@ def load_demo_data():
 # SKDM hesaplama motoru
 
 
-def calculate_emissions(data, emission_factors, grid_intensity, carbon_price):
+def calculate_emissions(
+    data: pd.DataFrame,
+    emission_factors: Dict[str, float],
+    grid_intensity: float,
+    carbon_price: float
+) -> Dict[str, Any]:
     """
     SKDM emisyon hesaplamalarını gerçekleştirir.
 
-    Formül: Total Emissions = (Production Quantity × Emission Factor) + (Energy Consumption × Grid Intensity)
+    Formül: Total Emissions = (Production Quantity × Emission Factor) + 
+            (Energy Consumption × Grid Intensity)
 
     Args:
-        data (pd.DataFrame): Üretim verileri
-        emission_factors (dict): Ürün tipine göre emisyon faktörleri (ton CO2/ton ürün)
-        grid_intensity (float): Şebeke karbon yoğunluğu (kg CO2/kWh)
-        carbon_price (float): Karbon fiyatı (€/ton CO2)
+        data: Üretim verileri (DataFrame)
+        emission_factors: Ürün tipine göre emisyon faktörleri (ton CO2/ton ürün)
+        grid_intensity: Şebeke karbon yoğunluğu (kg CO2/kWh)
+        carbon_price: Karbon fiyatı (€/ton CO2)
 
     Returns:
-        dict: Hesaplama sonuçları
+        dict: Hesaplama sonuçları anahtar-değer çiftleri içeren sözlük
+
+    Raises:
+        ValueError: Girdi doğrulaması başarısız veya hesaplama hatası
+        TypeError: Veri tipleri yanlış ise
     """
     try:
+        # Girdi doğrulaması
+        if not isinstance(data, pd.DataFrame):
+            raise TypeError("data parametresi pandas DataFrame olmalıdır")
+        if data.empty:
+            raise ValueError("Veri seti boş olamaz")
+        if not isinstance(emission_factors, dict):
+            raise TypeError("emission_factors parametresi dict olmalıdır")
+        if not isinstance(grid_intensity, (int, float)) or grid_intensity < 0:
+            raise ValueError("grid_intensity pozitif sayı olmalıdır")
+        if not isinstance(carbon_price, (int, float)) or carbon_price < 0:
+            raise ValueError("carbon_price pozitif sayı olmalıdır")
+
         # Veri kopyası oluştur
         df = data.copy()
 
@@ -115,13 +151,13 @@ def calculate_emissions(data, emission_factors, grid_intensity, carbon_price):
 # AI önerileri oluşturma fonksiyonu
 
 
-def generate_ai_recommendations(results):
+def generate_ai_recommendations(results: Dict[str, Any]) -> List[Dict[str, str]]:
     """
     Analiz sonuçlarına göre AI tabanlı stratejik öneriler üretir.
     Anthropic/OpenAI API entegrasyonu ile gerçek AI önerileri.
 
     Args:
-        results (dict): Hesaplama sonuçları
+        results: Hesaplama sonuçları (calculate_emissions döndürüsü)
 
     Returns:
         list: Öneri sözlüklerinin listesi
@@ -238,9 +274,15 @@ def parse_ai_response_to_recommendations(ai_response):
     })
 
 
-def generate_mock_recommendations(results):
+def generate_mock_recommendations(results: Dict[str, Any]) -> List[Dict[str, str]]:
     """
-    API mevcut değilse kullanılacak mock öneriler.
+    API mevcut değilse kullanılacak mock öneriler üretir.
+
+    Args:
+        results: Hesaplama sonuçları (calculate_emissions döndürüsü)
+
+    Returns:
+        list: Mock öneri sözlüklerinin listesi
     """
     recommendations = []
 

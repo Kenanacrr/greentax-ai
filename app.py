@@ -21,8 +21,14 @@ st.set_page_config(
 
 # Özel CSS stilleri
 def load_css():
-    with open("style.css") as f:
-        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+    """CSS dosyasını yükle ve uygula."""
+    try:
+        with open("style.css") as f:
+            st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+    except FileNotFoundError:
+        st.warning("⚠️ CSS dosyası bulunamadı. Varsayılan stilleri kullanıyorum.")
+    except Exception as e:
+        st.error(f"CSS yükleme hatası: {str(e)}")
 
 load_css()
 
@@ -93,8 +99,14 @@ if data is not None:
         help="Ülkenizin elektrik şebeke karbon yoğunluğu"
     )
     
-    # Karbon fiyatı
-    carbon_price = 85.0  # €/ton CO2
+    # Karbon fiyatı (€/ton CO2)
+    carbon_price = st.sidebar.number_input(
+        "Karbon Fiyatı (€/ton CO2)",
+        value=85.0,
+        min_value=0.0,
+        step=1.0,
+        help="AB Karbon Fiyatı Sistemi (ETS) referans fiyatı"
+    )
     
     # Hesaplamaları yap
     results = calculate_emissions(data, emission_factors, grid_intensity, carbon_price)
@@ -145,7 +157,7 @@ if data is not None:
             paper_bgcolor='rgba(0,0,0,0)',
             font_color='white'
         )
-        st.plotly_chart(fig_area, width='stretch')
+        st.plotly_chart(fig_area, use_container_width=True)
     
     with col2:
         # Hammadde bazlı emisyon dağılımı
@@ -162,7 +174,7 @@ if data is not None:
             paper_bgcolor='rgba(0,0,0,0)',
             font_color='white'
         )
-        st.plotly_chart(fig_sunburst, width='stretch')
+        st.plotly_chart(fig_sunburst, use_container_width=True)
     
     # Scatter plot - Üretim miktarı vs Emisyon
     fig_scatter = px.scatter(
@@ -179,7 +191,7 @@ if data is not None:
         paper_bgcolor='rgba(0,0,0,0)',
         font_color='white'
     )
-    st.plotly_chart(fig_scatter, width='stretch')
+    st.plotly_chart(fig_scatter, use_container_width=True)
     
     st.markdown("---")
     
