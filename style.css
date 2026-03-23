@@ -1,0 +1,211 @@
+/* style.css - GreenTax AI Özel Stilleri */
+/* Dark mode ve yeşil vurgulu profesyonel tema */
+
+:root {
+    --primary-color: #2ECC71;
+    --secondary-color: #27AE60;
+    --background-color: #1a1a1a;
+    --surface-color: #2d2d2d;
+    --text-color: #ffffff;
+    --text-secondary: #cccccc;
+    --border-color: #404040;
+}
+
+/* Genel body stilleri */
+body {
+    background-color: var(--background-color) !important;
+    color: var(--text-color) !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Streamlit özel stilleri */
+.stApp {
+    background-color: var(--background-color);
+}
+
+/* Başlık stilleri */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--primary-color) !important;
+    font-weight: 600;
+}
+
+/* Metin stilleri */
+p, span, div {
+    color: var(--text-color) !important;
+}
+
+/* Sidebar stilleri */
+.sidebar .sidebar-content {
+    background-color: var(--surface-color) !important;
+    border-right: 2px solid var(--border-color);
+}
+
+/* Buton stilleri */
+.stButton > button {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 10px 20px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+}
+
+.stButton > button:hover {
+    background-color: var(--secondary-color) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3) !important;
+}
+
+/* Metrik kartları */
+.metric-container {
+    background-color: var(--surface-color) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    margin: 10px 0 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+.metric-value {
+    color: var(--primary-color) !important;
+    font-size: 2em !important;
+    font-weight: bold !important;
+}
+
+.metric-label {
+    color: var(--text-secondary) !important;
+    font-size: 0.9em !important;
+}
+
+/* Grafik containerları */
+.plotly-graph-div {
+    background-color: var(--surface-color) !important;
+    border-radius: 12px !important;
+    border: 1px solid var(--border-color) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Veri tablosu stilleri */
+.dataframe {
+    background-color: var(--surface-color) !important;
+    border-radius: 8px !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+.dataframe th {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+    font-weight: 600 !important;
+    border: none !important;
+}
+
+.dataframe td {
+    color: var(--text-color) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+}
+
+/* Input alanları */
+.stTextInput > div > div > input,
+.stNumberInput > div > div > input,
+.stSelectbox > div > div > select {
+    background-color: var(--surface-color) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 6px !important;
+    padding: 8px 12px !important;
+}
+
+.stTextInput > div > div > input:focus,
+.stNumberInput > div > div > input:focus,
+.stSelectbox > div > div > select:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 2px rgba(46, 204, 113, 0.2) !important;
+}
+
+/* Checkbox stilleri */
+.stCheckbox > div > div > label > div {
+    background-color: var(--surface-color) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+.stCheckbox > div > div > label > div[aria-checked="true"] {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+/* Uyarı ve hata mesajları */
+.stAlert {
+    background-color: var(--surface-color) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 8px !important;
+    color: var(--text-color) !important;
+}
+
+.stSuccess {
+    border-left-color: var(--primary-color) !important;
+}
+
+.stError {
+    border-left-color: #e74c3c !important;
+}
+
+.stWarning {
+    border-left-color: #f39c12 !important;
+}
+
+.stInfo {
+    border-left-color: #3498db !important;
+}
+
+/* Dosya uploader stilleri */
+.stFileUploader > div > div > div {
+    background-color: var(--surface-color) !important;
+    border: 2px dashed var(--border-color) !important;
+    border-radius: 8px !important;
+    color: var(--text-secondary) !important;
+}
+
+.stFileUploader > div > div > div:hover {
+    border-color: var(--primary-color) !important;
+    background-color: rgba(46, 204, 113, 0.05) !important;
+}
+
+/* Expander stilleri */
+.streamlit-expanderHeader {
+    background-color: var(--surface-color) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 8px !important;
+    color: var(--text-color) !important;
+}
+
+.streamlit-expanderHeader:hover {
+    background-color: rgba(46, 204, 113, 0.1) !important;
+}
+
+/* Progress bar stilleri */
+.stProgress > div > div > div {
+    background-color: var(--primary-color) !important;
+}
+
+/* Özel animasyonlar */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Responsive tasarım */
+@media (max-width: 768px) {
+    .metric-container {
+        margin: 5px 0 !important;
+        padding: 15px !important;
+    }
+
+    .metric-value {
+        font-size: 1.5em !important;
+    }
+}
